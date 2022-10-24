@@ -23,7 +23,7 @@ import RightArrow from '../../assets/icons/RightArrow';
 
 // utils
 import getCurrentTime from '../../utils/getCurrentTime';
-import { fetchWeather } from '../../utils/fetchData';
+import { fetchWeatherWithLatLon, fetchWeatherWithCity } from '../../utils/fetchData';
 
 const Welcome = () => {
 
@@ -74,24 +74,27 @@ const Welcome = () => {
     // function to check permissions and get Location
     const getLocation = () => {
         const permissionResult = requestLocationPermission();
-        permissionResult.then(res => {
+        permissionResult.then(async res => {
             if (res) {
                 Geolocation.getCurrentPosition(
                     async position => {
-                        console.log(position);
-                        const weatherRes = await fetchWeather(position.coords.latitude, position.coords.longitude)
+                        const weatherRes = await fetchWeatherWithLatLon(position.coords.latitude, position.coords.longitude)
                         setWeather(weatherRes.data)
                         changeTemp(weatherRes.data.main.temp)
                     },
                     async error => {
                         console.error(error.code, error.message);
-                        const weatherRes = await fetchWeather(1.290270, 103.851959)
+                        const weatherRes = await fetchWeatherWithCity()
                         setWeather(weatherRes.data)
-                        //console.log('weather',weatherRes.data.weather[0])
                         changeTemp(weatherRes.data.main.temp)
                     },
                     {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
                 );
+            }
+            else {
+                const weatherRes = await fetchWeatherWithCity()
+                setWeather(weatherRes.data)
+                changeTemp(weatherRes.data.main.temp)
             }
         });
     };

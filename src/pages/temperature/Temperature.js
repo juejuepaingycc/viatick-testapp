@@ -34,13 +34,13 @@ const scWidth = Dimensions.get('window').width
 const Temperature = ({navigation}) => {
 
     const { currentTemp } = useContext(Context)
-    let roomTemp = Math.round(currentTemp && currentTemp > 10 ? currentTemp : 10)
-    const [temperature, setTemperature] = useState(roomTemp)
+    let roomTemp = currentTemp && currentTemp > 10 ? currentTemp : 10
+    const [temperature, setTemperature] = useState(Math.round(roomTemp))
     const [progress, setProgress] = useState(((temperature-10)/20)*100)
 
-    const temp = useSharedValue(roomTemp);
-    const rotation = useSharedValue((roomTemp-10)/20);
-    const savedRotation = useSharedValue((roomTemp-10)/20);
+    const temp = useSharedValue(Math.round(roomTemp));
+    const rotation = useSharedValue(((Math.round(roomTemp)-10)/20) * Math.PI);
+    const savedRotation = useSharedValue((Math.round(roomTemp)-10)/20);
     
     const backHandler =() => {
         navigation.goBack()
